@@ -30,18 +30,6 @@ cfg.LABELS = np.array(utils.readLines(cfg.LABELS_FILE))
 cfg.CODES = loadCodes()
 
 output_folder = "./example/vowa/output"
-def result_writer(filename, segment_start, segment_end, predictions):
-    output_file = Path(output_folder) / Path(f"{Path(filename).stem}.fast.txt")
-    
-    # Ensure the directory exists
-    output_file.parent.mkdir(parents=True, exist_ok=True)
-    
-    def map_fn(segment_start, segment_end, species, confidence):
-        # Open the file in append mode
-        with open(output_file, "a") as file:
-            file.write(f"{segment_start}\t{segment_end}\t{species}\t{confidence}\n")
-    [map_fn(segment_start, segment_end,*prediction) for prediction in predictions]
-
 classifier = tf.keras.models.load_model(os.path.join(SCRIPT_DIR, cfg.MODEL_PATH), compile=True)
 
 @tf.py_function(Tout=(tf.float32, tf.string))
